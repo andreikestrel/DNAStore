@@ -8,18 +8,35 @@
         class="search-input"
         placeholder="Buscar produtos"
       />
-      <button @click="handleSearch" class="search-button">🔎 Buscar</button>
+      <button @click="handleSearch" class="search-button">🔎 Pesquisar</button>
 
       <button @click="toggleShowFavorites" class="showFavorites-button">
-        {{ showFavorites ? "Mostrar todos" : "Apenas favoritos" }}
+        {{ showFavorites ? "Mostrar todos" : " ★ Apenas favoritos" }}
       </button>
+    </div>
+
+    <div v-if="isSearchActive" class="search-results">
+      <template v-if="filteredProducts.length > 0">
+        {{ filteredProducts.length }} resultado{{
+          filteredProducts.length !== 1 ? "s" : ""
+        }}
+        encontrado{{ filteredProducts.length !== 1 ? "s" : "" }} para "{{
+          lastSearchQuery
+        }}"
+      </template>
+      <template v-else>
+        Nenhum produto encontrado para "{{ lastSearchQuery }}"
+      </template>
+      <a href="#" @click.prevent="clearSearch" class="clear-search"
+        >Limpar busca</a
+      >
     </div>
 
     <div v-if="loading" class="loading">Carregando produtos...</div>
     <div v-else-if="error" class="error">
       Erro ao carregar produtos: {{ error }}
     </div>
-    <div class="product-list" v-else>
+    <div class="product-list" v-else-if="filteredProducts.length > 0">
       <div
         v-for="product in displayedProducts"
         :key="product.id"
@@ -56,8 +73,10 @@ export default {
   setup() {
     const store = useStore();
     const searchQuery = ref("");
+    const lastSearchQuery = ref(""); // Nova variável para armazenar a última busca realizada
     const showFavorites = ref(false);
     const filteredProducts = ref([]);
+    const isSearchActive = ref(false);
 
     const displayedProducts = computed(() => {
       if (showFavorites.value) {
@@ -76,16 +95,31 @@ export default {
     };
 
     const handleSearch = () => {
+      // Armazena o valor atual da busca
+      lastSearchQuery.value = searchQuery.value;
+
       // Realiza a filtragem dos produtos
       filteredProducts.value = store.state.products.filter((product) =>
-        product.title.toLowerCase().includes(searchQuery.value.toLowerCase())
+        product.title
+          .toLowerCase()
+          .includes(lastSearchQuery.value.toLowerCase())
       );
 
+      // Ativa o estado de busca
+      isSearchActive.value = true;
+
       // Envia os dados para o Google Task Manager
-      sendToGoogleTaskManager(searchQuery.value);
+      sendToGoogleTaskManager(lastSearchQuery.value);
 
       // Log da pesquisa realizada
-      console.log("Pesquisa realizada:", searchQuery.value);
+      console.log("Pesquisa realizada:", lastSearchQuery.value);
+    };
+
+    const clearSearch = () => {
+      searchQuery.value = "";
+      lastSearchQuery.value = "";
+      filteredProducts.value = store.state.products;
+      isSearchActive.value = false;
     };
 
     // Função placeholder para enviar dados ao Google Task Manager
@@ -103,17 +137,20 @@ export default {
 
     return {
       searchQuery,
+      lastSearchQuery,
       showFavorites,
       displayedProducts,
+      filteredProducts,
       loading,
       error,
+      isSearchActive,
       toggleShowFavorites,
       handleSearch,
+      clearSearch,
     };
   },
 };
 </script>
-
 <style scoped>
 .title {
   font-size: 3rem;
@@ -162,7 +199,33 @@ export default {
   font-size: 1rem;
   transition: background-color 0.3s, color 0.3s;
 }
+.search-results {
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 1.1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
 
+.clear-search {
+  margin-left: 10px;
+  color: #c62e2e;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.clear-search:hover {
+  text-decoration: underline;
+}
+
+.no-results {
+  text-align: center;
+  font-size: 1.1rem;
+  margin-bottom: 20px;
+  color: white;
+}
 .showFavorites-button:hover {
   background-color: #7a1d1d;
   color: #ebeb04;
@@ -237,9 +300,36 @@ export default {
   font-weight: bold;
 }
 
+.search-results {
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 1.1rem;
+}
+
+.clear-search {
+  margin-left: 10px;
+  color: #c62e2e;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.clear-search:hover {
+  text-decoration: underline;
+}
+
 @media (max-width: 768px) {
   .product-item {
     flex: 0 1 calc(50% - 20px);
+  }
+  .product-box-input-button {
+    flex-wrap: wrap;
+  }
+  .search-input {
+    width: 100%;
+  }
+  .search-results {
+    flex-wrap: wrap;
+    font-size: 3rem;
   }
 }
 

@@ -9,7 +9,7 @@ export const fetchProducts = async () => {
     return response.data;
   } catch (error) {
     console.error("Erro ao buscar produtos:", error);
-    throw error; // Propaga o erro para ser tratado no componente
+    throw error;
   }
 };
 
@@ -20,6 +20,6 @@ export const fetchProductReport = async () => {
     return response.data;
   } catch (error) {
     console.error("Erro ao buscar o relatório:", error);
-    throw error; // Propaga o erro para ser tratado no componente
+    throw error;
   }
 };
