@@ -4,6 +4,9 @@
 ### Descrição
 Este projeto é uma resposta ao desafio que envolve a criação de uma aplicação web simples com funcionalidades de listagem de produtos e integração com o Google Tag Manager.
 
+![image](https://github.com/user-attachments/assets/270c29b5-fe97-4f6a-9a37-622b5cb44e79)
+
+
 **Funcionalidades Principais:**
 
 - **Página de Listagem de Produtos:** A aplicação apresenta uma página em Vue.js que exibe uma lista de produtos fictícios, cujos dados são armazenados em um arquivo JSON obtido do Fake Store API. Os produtos são exibidos dinamicamente, mostrando informações como nome, preço e imagem.
