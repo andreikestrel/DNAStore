@@ -16,6 +16,8 @@ Este projeto é uma resposta ao desafio que envolve a criação de uma aplicaç�
 
 - **Integração com Google Tag Manager (GTM):** A aplicação utiliza o GTM para rastrear eventos importantes, como buscas de produtos, cliques em produtos e ações de favoritar/desfavoritar.
 
+- **Estilização** A estilização da aplicação foi feita exclusivamente com CSS puro. Para os ícones, foram utilizados emojis em formato Unicode, simplificando a implementação. A página segue uma paleta de cores que inclui o vermelho #c62e2e, preto e branco padrão, e o amarelo #ebeb04 para destacar o texto do botão 'Mostrar Favoritos' quando ativado. O hover desse botão utiliza o tom de vermelho escuro #7a1d1d.
+
 **Backend:**
 
 O backend é construído com Node.js e fornece um servidor básico que disponibiliza os dados dos produtos através de três endpoints principais:

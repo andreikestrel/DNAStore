@@ -73,7 +73,7 @@ export default {
   setup() {
     const store = useStore();
     const searchQuery = ref("");
-    const lastSearchQuery = ref(""); // Nova variável para armazenar a última busca realizada
+    const lastSearchQuery = ref(""); // variavel para armazenar a última busca realizada
     const showFavorites = ref(false);
     const filteredProducts = ref([]);
     const isSearchActive = ref(false);
