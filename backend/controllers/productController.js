@@ -7,9 +7,24 @@ const getAllProducts = (req, res) => {
 };
 
 // Função para retornar o relatório básico
+// Função para retornar o relatório básico
 const getReport = (req, res) => {
   const products = Product.getProducts();
-  res.json({ totalProducts: products.length });
+  const totalProducts = products.length;
+  const productsByCategory = {};
+
+  products.forEach((product) => {
+    if (!productsByCategory[product.category]) {
+      productsByCategory[product.category] = 1;
+    } else {
+      productsByCategory[product.category]++;
+    }
+  });
+
+  res.json({
+    totalProducts,
+    productsByCategory,
+  });
 };
 
 module.exports = {
