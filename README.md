@@ -24,7 +24,7 @@ O backend é construído com Node.js e fornece um servidor básico que disponibi
 
 2. **`/api/products/report`:** Este endpoint fornece um relatório básico que inclui a contagem de itens da api e a quantidade por categoria.
 
-**Integração com Google Tag Manager:**
+## **Integração com Google Tag Manager:**
 
 A aplicação implementa o rastreamento de eventos detalhados usando o Google Tag Manager:
 
@@ -32,11 +32,12 @@ A aplicação implementa o rastreamento de eventos detalhados usando o Google Ta
 
 2. **Rastreamento de Cliques em Produtos:** Quando um usuário clica em um produto, um evento `product_click` é enviado ao GTM com o ID e nome do produto.
 
-3. **Rastreamento de Buscas:** Cada busca realizada pelo usuário dispara um evento `product_search` com o termo de pesquisa.
+4. **Rastreamento de Buscas:** Cada busca realizada pelo usuário dispara um evento `product_search` com o termo de pesquisa.
 
-4. **Rastreamento de Favoritos:** As ações de favoritar (`favorite_product`) e desfavoritar (`unfavorite_product`) produtos são rastreadas, incluindo detalhes como ID, nome, categoria e preço do produto.
+5. **Rastreamento de Favoritos:** As ações de favoritar (`favorite_product`) e desfavoritar (`unfavorite_product`) produtos são rastreadas, incluindo detalhes como ID, nome, categoria e preço do produto.
+   ![image](https://github.com/user-attachments/assets/9e915136-26ac-4bf8-9fb9-af2bbc038d1c)
 
-5. **Camada de Dados:** A aplicação utiliza a camada de dados do GTM (`dataLayer`) para enviar informações detalhadas sobre cada evento, permitindo uma análise mais aprofundada do comportamento do usuário.
+7. **Camada de Dados:** A aplicação utiliza a camada de dados do GTM (`dataLayer`) para enviar informações detalhadas sobre cada evento, permitindo uma análise mais aprofundada do comportamento do usuário.
 
 **Funcionalidade de Favoritos:**
 
