@@ -23,7 +23,12 @@ export default {
     );
 
     const toggleFavorite = () => {
-      store.commit("toggleFavorite", props.product.id);
+      store.commit("toggleFavorite", {
+        id: props.product.id,
+        name: props.product.title,
+        category: props.product.category,
+        price: props.product.price,
+      });
     };
 
     return {
@@ -75,7 +80,6 @@ export default {
 }
 
 .favorite-button.is-favorited {
-  background: ;
   text-align: center;
 }
 </style>

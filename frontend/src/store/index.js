@@ -1,3 +1,4 @@
+/* eslint-disable no-empty-pattern */
 import { createStore } from "vuex";
 import * as productService from "../services/productService";
 
@@ -14,12 +15,14 @@ export default createStore({
     setProducts(state, products) {
       state.products = products;
     },
-    toggleFavorite(state, productId) {
-      const index = state.favorites.indexOf(productId);
+    toggleFavorite(state, product) {
+      const index = state.favorites.indexOf(product.id);
       if (index > -1) {
         state.favorites.splice(index, 1);
+        this.dispatch("logUnfavoriteProduct", product);
       } else {
-        state.favorites.push(productId);
+        state.favorites.push(product.id);
+        this.dispatch("logFavoriteProduct", product);
       }
       localStorage.setItem("favorites", JSON.stringify(state.favorites));
     },
@@ -44,6 +47,30 @@ export default createStore({
         commit("setLoading", false);
       }
     },
+    logFavoriteProduct({}, product) {
+      console.log(`Product favorited: ${product.name} (ID: ${product.id})`);
+      if (window.dataLayer) {
+        window.dataLayer.push({
+          event: "favorite_product",
+          product_id: product.id,
+          product_name: product.name,
+          product_category: product.category,
+          product_price: product.price,
+        });
+      }
+    },
+    logUnfavoriteProduct({}, product) {
+      console.log(`Product unfavorited: ${product.name} (ID: ${product.id})`);
+      if (window.dataLayer) {
+        window.dataLayer.push({
+          event: "unfavorite_product",
+          product_id: product.id,
+          product_name: product.name,
+          product_category: product.category,
+          product_price: product.price,
+        });
+      }
+    },
     productClicked({ state }, productId) {
       if (window.dataLayer) {
         window.dataLayer.push({
@@ -54,7 +81,6 @@ export default createStore({
         });
       }
     },
-    // eslint-disable-next-line no-empty-pattern
     productSearched({}, searchQuery) {
       if (window.dataLayer) {
         window.dataLayer.push({

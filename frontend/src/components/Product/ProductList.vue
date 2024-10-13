@@ -164,8 +164,8 @@ export default {
 }
 
 .showFavorites-button:hover {
-  background-color: #52616b;
-  color: white;
+  background-color: #7a1d1d;
+  color: #ebeb04;
 }
 
 .loading,
