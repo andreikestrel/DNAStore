@@ -1,13 +1,13 @@
 const Product = require('../models/productModel');
 
-// Função para retornar todos os produtos
+
 const getAllProducts = (req, res) => {
   const products = Product.getProducts();
   res.json(products);
 };
 
-// Função para retornar o relatório básico
-// Função para retornar o relatório básico
+
+// Lógica do relatório
 const getReport = (req, res) => {
   const products = Product.getProducts();
   const totalProducts = products.length;

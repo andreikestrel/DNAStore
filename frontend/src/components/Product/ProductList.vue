@@ -4,12 +4,14 @@
       <h1 class="title"><span>DNA</span> <span>STORE</span></h1>
       <input
         v-model="searchQuery"
-        @input="handleSearch"
+        @keyup.enter="handleSearch"
         class="search-input"
         placeholder="Buscar produtos"
       />
+      <button @click="handleSearch" class="search-button">🔎 Buscar</button>
+
       <button @click="toggleShowFavorites" class="showFavorites-button">
-        {{ showFavorites ? "Mostrar todos" : "Mostrar favoritos" }}
+        {{ showFavorites ? "Mostrar todos" : "Apenas favoritos" }}
       </button>
     </div>
 
@@ -55,10 +57,7 @@ export default {
     const store = useStore();
     const searchQuery = ref("");
     const showFavorites = ref(false);
-
-    const filteredProducts = computed(() =>
-      store.getters.filteredProducts(searchQuery.value)
-    );
+    const filteredProducts = ref([]);
 
     const displayedProducts = computed(() => {
       if (showFavorites.value) {
@@ -77,11 +76,29 @@ export default {
     };
 
     const handleSearch = () => {
-      store.dispatch("productSearched", searchQuery.value);
+      // Realiza a filtragem dos produtos
+      filteredProducts.value = store.state.products.filter((product) =>
+        product.title.toLowerCase().includes(searchQuery.value.toLowerCase())
+      );
+
+      // Envia os dados para o Google Task Manager
+      sendToGoogleTaskManager(searchQuery.value);
+
+      // Log da pesquisa realizada
+      console.log("Pesquisa realizada:", searchQuery.value);
+    };
+
+    // Função placeholder para enviar dados ao Google Task Manager
+    const sendToGoogleTaskManager = (query) => {
+      // Implemente a lógica para enviar os dados ao Google Task Manager aqui
+      console.log("Enviando para o Google Task Manager:", query);
     };
 
     onMounted(() => {
-      store.dispatch("fetchProducts");
+      store.dispatch("fetchProducts").then(() => {
+        // Inicializa filteredProducts com todos os produtos
+        filteredProducts.value = store.state.products;
+      });
     });
 
     return {
@@ -133,12 +150,14 @@ export default {
   border-radius: 10px;
 }
 
+.search-button,
 .showFavorites-button {
   padding: 10px;
   cursor: pointer;
   background-color: #c62e2e;
   color: white;
   border: none;
+  min-width: 140px;
   border-radius: 10px;
   font-size: 1rem;
   transition: background-color 0.3s, color 0.3s;

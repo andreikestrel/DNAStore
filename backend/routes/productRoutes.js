@@ -2,10 +2,10 @@ const express = require('express');
 const router = express.Router();
 const productController = require('../controllers/productController');
 
-// Rota para listar todos os produtos
+// Listar todos os produtos
 router.get('/products', productController.getAllProducts);
 
-// Rota para o relatório de produtos
+// Rota para o relatorio
 router.get('/products/report', productController.getReport);
 
 module.exports = router;
