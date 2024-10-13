@@ -1,46 +1,80 @@
 <template>
-  <button @click="toggleFavorite">
-    {{ isFavorited ? "Desfavoritar" : "Favoritar" }}
+  <button
+    @click="toggleFavorite"
+    class="favorite-button"
+    :class="{ 'is-favorited': isFavorited }"
+  >
+    <span class="icon">{{ isFavorited ? "❌" : "❤️" }}</span>
+    <span class="text">{{ isFavorited ? "Desfavoritar" : "Favoritar" }}</span>
   </button>
 </template>
 
 <script>
+import { computed } from "vue";
+import { useStore } from "vuex";
+
 export default {
   props: ["product"],
-  data() {
-    return {
-      isFavorited: false,
+  setup(props) {
+    const store = useStore();
+
+    const isFavorited = computed(() =>
+      store.getters.isFavorite(props.product.id)
+    );
+
+    const toggleFavorite = () => {
+      store.commit("toggleFavorite", props.product.id);
     };
-  },
-  methods: {
-    toggleFavorite() {
-      this.isFavorited = !this.isFavorited;
-      const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
-      if (this.isFavorited) {
-        favorites.push(this.product.id);
-      } else {
-        const index = favorites.indexOf(this.product.id);
-        if (index > -1) favorites.splice(index, 1);
-      }
-      localStorage.setItem("favorites", JSON.stringify(favorites));
-    },
-  },
-  mounted() {
-    const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
-    this.isFavorited = favorites.includes(this.product.id);
+
+    return {
+      isFavorited,
+      toggleFavorite,
+    };
   },
 };
 </script>
 
 <style scoped>
-button {
-  border: #0056b3 1px;
-  color: white;
+.favorite-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: rgba(255, 255, 255, 0.8);
   border: none;
-  padding: 10px;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  font-size: 0.6rem;
+  z-index: 1; /* Adicionado para garantir que o botão fique acima de outros elementos */
 }
-button:hover {
-  background-color: #4cb920;
+
+.favorite-button:hover {
+  width: auto;
+  border-radius: 15px; /* Ajustado para metade da altura */
+  padding: 0 10px;
+}
+
+.favorite-button .icon {
+  font-size: 1rem; /* Diminuído de 1.2rem para 1rem */
+}
+
+.favorite-button .text {
+  display: none;
+  margin-left: 5px;
+  white-space: nowrap;
+}
+
+.favorite-button:hover .text {
+  display: inline;
+}
+
+.favorite-button.is-favorited {
+  background-color: #c62e2e;
 }
 </style>

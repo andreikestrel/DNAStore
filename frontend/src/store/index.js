@@ -1,13 +1,14 @@
-import Vuex from "vuex";
-const { createStore } = Vuex;
+import { createStore } from "vuex";
 import * as productService from "../services/productService";
 
 export default createStore({
-  state: {
-    products: [],
-    favorites: JSON.parse(localStorage.getItem("favorites")) || [],
-    error: null,
-    loading: false,
+  state() {
+    return {
+      products: [],
+      favorites: JSON.parse(localStorage.getItem("favorites")) || [],
+      error: null,
+      loading: false,
+    };
   },
   mutations: {
     setProducts(state, products) {
@@ -41,6 +42,25 @@ export default createStore({
         commit("setError", error.message || "Erro ao buscar produtos");
       } finally {
         commit("setLoading", false);
+      }
+    },
+    productClicked({ state }, productId) {
+      if (window.dataLayer) {
+        window.dataLayer.push({
+          event: "product_click",
+          product_id: productId,
+          product_name:
+            state.products.find((p) => p.id === productId)?.title || "",
+        });
+      }
+    },
+    // eslint-disable-next-line no-empty-pattern
+    productSearched({}, searchQuery) {
+      if (window.dataLayer) {
+        window.dataLayer.push({
+          event: "product_search",
+          search_term: searchQuery,
+        });
       }
     },
   },

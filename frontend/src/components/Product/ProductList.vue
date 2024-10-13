@@ -1,17 +1,24 @@
 <template>
   <div class="product-list-container">
-    <input
-      v-model="searchQuery"
-      class="search-input"
-      placeholder="Buscar produtos"
-    />
+    <div class="product-box-input-button">
+      <input
+        v-model="searchQuery"
+        @input="handleSearch"
+        class="search-input"
+        placeholder="Buscar produtos"
+      />
+      <button @click="toggleShowFavorites" class="showFavorites-button">
+        {{ showFavorites ? "Mostrar todos" : "Mostrar favoritos" }}
+      </button>
+    </div>
+
     <div v-if="loading" class="loading">Carregando produtos...</div>
     <div v-else-if="error" class="error">
       Erro ao carregar produtos: {{ error }}
     </div>
-    <ul class="product-list" v-else>
-      <li
-        v-for="product in filteredProducts"
+    <div class="product-list" v-else>
+      <div
+        v-for="product in displayedProducts"
         :key="product.id"
         class="product-item"
       >
@@ -24,36 +31,50 @@
             />
           </div>
           <span class="product-title">{{ product.title }}</span>
-          <span class="product-price"> R${{ product.price }}</span>
-          <button @click="toggleFavorite(product.id)" class="favorite-button">
-            {{ isFavorite(product.id) ? "❌ desfavoritar" : "❤️ favoritar" }}
-          </button>
+          <span class="product-price">R${{ product.price }}</span>
+          <FavoriteButton :product="product" />
         </div>
-      </li>
-    </ul>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import { computed, ref, onMounted } from "vue";
 import { useStore } from "vuex";
+import FavoriteButton from "./FavoriteButton.vue";
 
 export default {
+  components: {
+    FavoriteButton,
+  },
   setup() {
     const store = useStore();
     const searchQuery = ref("");
+    const showFavorites = ref(false);
 
     const filteredProducts = computed(() =>
       store.getters.filteredProducts(searchQuery.value)
     );
 
+    const displayedProducts = computed(() => {
+      if (showFavorites.value) {
+        return filteredProducts.value.filter((product) =>
+          store.getters.isFavorite(product.id)
+        );
+      }
+      return filteredProducts.value;
+    });
+
     const loading = computed(() => store.state.loading);
     const error = computed(() => store.state.error);
 
-    const isFavorite = (productId) => store.getters.isFavorite(productId);
+    const toggleShowFavorites = () => {
+      showFavorites.value = !showFavorites.value;
+    };
 
-    const toggleFavorite = (productId) => {
-      store.commit("toggleFavorite", productId);
+    const handleSearch = () => {
+      store.dispatch("productSearched", searchQuery.value);
     };
 
     onMounted(() => {
@@ -62,11 +83,12 @@ export default {
 
     return {
       searchQuery,
-      filteredProducts,
-      isFavorite,
-      toggleFavorite,
+      showFavorites,
+      displayedProducts,
       loading,
       error,
+      toggleShowFavorites,
+      handleSearch,
     };
   },
 };
@@ -76,80 +98,116 @@ export default {
 .product-list-container {
   display: flex;
   flex-direction: column;
-  align-items: center; /* Centraliza horizontalmente */
-  justify-content: start; /* Centraliza verticalmente */
-  min-height: 100vh; /* Ocupa a altura total da tela */
-  padding: 20px; /* Espaçamento interno */
+  align-items: center;
+  padding: 20px;
+}
+
+.product-box-input-button {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+  margin-bottom: 20px;
 }
 
 .search-input {
-  margin-bottom: 20px;
   padding: 10px;
   border: none;
-  font-size: 2rem;
+  font-size: 1rem;
   height: auto;
+  width: 60%;
+  border-radius: 10px;
+}
+
+.showFavorites-button {
+  padding: 10px;
+  cursor: pointer;
+  background-color: #c62e2e;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.showFavorites-button:hover {
+  background-color: #52616b;
+  color: white;
 }
 
 .loading,
 .error {
-  margin-bottom: 20px; /* Espaçamento abaixo das mensagens de loading e erro */
+  margin-bottom: 20px;
 }
 
 .product-list {
-  list-style-type: none;
-  padding: 0;
-  display: flex; /* Muda para exibir itens em linha */
-  flex-wrap: wrap; /* Permite que os itens quebrem para a linha seguinte, se necessário */
-  justify-content: center; /* Centraliza os itens horizontalmente */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+}
+
+.product-item {
+  flex: 0 1 calc(25% - 20px);
+  min-width: 200px;
+  max-width: 300px;
 }
 
 .product-box {
-  background-color: aqua;
-  width: 250px;
-  min-height: 325px;
+  background-color: #ffffff;
   display: flex;
-  gap: 20px;
   flex-direction: column;
   align-items: center;
-  margin: 10px; /* Espaçamento entre os itens */
+  justify-content: space-between;
+  height: 100%;
+  gap: 20px;
   border: 1px solid #ddd;
   padding: 10px;
-  border-radius: 8px; /* Bordas levemente arredondadas */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+  border-radius: 5px;
   transition: transform 0.2s;
+  position: relative;
 }
 
-.product-item:hover {
-  transform: scale(1.05); /* Efeito de aumento ao passar o mouse */
+.product-box:hover {
+  transform: scale(1.05);
 }
+
 .product-box-image {
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
+  height: 150px;
   margin-bottom: 10px;
-  width: 90px; /* Reduz a largura das imagens */
-  height: 90px;
 }
+
 .product-image {
-  max-width: 100%; /* Limita a largura da imagem ao tamanho do contêiner */
-  max-height: 100%; /* Mantém a proporção da imagem */
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
 }
 
 .product-title,
 .product-price {
   text-align: center;
-  font-size: 1rem; /* Centraliza o texto dos títulos e preços */
+  font-size: 1rem;
+  margin-bottom: 5px;
 }
 
-.favorite-button {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  cursor: pointer;
+.product-title {
+  font-weight: bold;
 }
 
-.favorite-button:hover {
-  background-color: #0056b3;
+@media (max-width: 768px) {
+  .product-item {
+    flex: 0 1 calc(50% - 20px);
+  }
+}
+
+@media (max-width: 480px) {
+  .product-item {
+    flex: 0 1 100%;
+  }
 }
 </style>
