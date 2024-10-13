@@ -34,13 +34,13 @@ export default {
 
 <style scoped>
 button {
-  background-color: #007bff;
+  border: #0056b3 1px;
   color: white;
   border: none;
   padding: 10px;
   cursor: pointer;
 }
 button:hover {
-  background-color: #0056b3;
+  background-color: #4cb920;
 }
 </style>
