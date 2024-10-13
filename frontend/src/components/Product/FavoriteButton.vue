@@ -4,7 +4,7 @@
     class="favorite-button"
     :class="{ 'is-favorited': isFavorited }"
   >
-    <span class="icon">{{ isFavorited ? "❌" : "❤️" }}</span>
+    <span class="icon">{{ isFavorited ? "❤️" : "💔" }}</span>
     <span class="text">{{ isFavorited ? "Desfavoritar" : "Favoritar" }}</span>
   </button>
 </template>
@@ -75,6 +75,7 @@ export default {
 }
 
 .favorite-button.is-favorited {
-  background-color: #c62e2e;
+  background: ;
+  text-align: center;
 }
 </style>

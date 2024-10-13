@@ -1,6 +1,7 @@
 <template>
   <div class="product-list-container">
     <div class="product-box-input-button">
+      <h1 class="title"><span>DNA</span> <span>STORE</span></h1>
       <input
         v-model="searchQuery"
         @input="handleSearch"
@@ -31,7 +32,9 @@
             />
           </div>
           <span class="product-title">{{ product.title }}</span>
-          <span class="product-price">R${{ product.price }}</span>
+          <div>
+            <span class="product-price">R${{ product.price }}</span>
+          </div>
           <FavoriteButton :product="product" />
         </div>
       </div>
@@ -95,6 +98,17 @@ export default {
 </script>
 
 <style scoped>
+.title {
+  font-size: 3rem;
+  font-family: "Asap Condensed", sans-serif;
+  font-weight: 600;
+  color: #c62e2e;
+  user-select: none;
+}
+.title span:nth-child(2) {
+  color: white;
+}
+
 .product-list-container {
   display: flex;
   flex-direction: column;
@@ -167,10 +181,13 @@ export default {
   border-radius: 5px;
   transition: transform 0.2s;
   position: relative;
+  filter: brightness(70%);
+  transition: filter 0.3s ease;
 }
 
 .product-box:hover {
-  transform: scale(1.05);
+  transform: scale(1.001);
+  filter: brightness(100%);
 }
 
 .product-box-image {
@@ -187,12 +204,14 @@ export default {
   max-height: 100%;
   object-fit: contain;
 }
-
 .product-title,
 .product-price {
   text-align: center;
-  font-size: 1rem;
   margin-bottom: 5px;
+}
+
+.product-price {
+  font-size: 1.5rem;
 }
 
 .product-title {

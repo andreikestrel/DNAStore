@@ -9,7 +9,7 @@ app.use(store);
 
 app.use(
   createGtm({
-    id: "GTM-KWQMXRQ9", // Seu ID do GTM
+    id: "GTM-KWQMXRQ9",
     enabled: true,
     debug: true,
     loadScript: true,
