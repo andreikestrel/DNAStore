@@ -37,9 +37,14 @@ A aplicação implementa o rastreamento de eventos detalhados usando o Google Ta
 
 2. **Rastreamento de Cliques em Produtos:** Quando um usuário clica em um produto, um evento `product_click` é enviado ao GTM com o ID e nome do produto.
 
-4. **Rastreamento de Buscas:** Cada busca realizada pelo usuário dispara um evento `product_search` com o termo de pesquisa.
+4. **Rastreamento de Buscas:** Cada busca realizada pelo usuário dispara um evento `product_search` com o termo de pesquisa e a quantidade de items encontrados.
+![image](https://github.com/user-attachments/assets/d7482b44-d3c3-4c62-9399-90cf9fb31b19)   
+![image](https://github.com/user-attachments/assets/a87d92b7-69ae-4ba0-a74b-740965967256)
 
-5. **Rastreamento de Favoritos:** As ações de favoritar (`favorite_product`) e desfavoritar (`unfavorite_product`) produtos são rastreadas, incluindo detalhes como ID, nome, categoria e preço do produto.
+
+
+
+6. **Rastreamento de Favoritos:** As ações de favoritar (`favorite_product`) e desfavoritar (`unfavorite_product`) produtos são rastreadas, incluindo detalhes como ID, nome, categoria e preço do produto.
    ![image](https://github.com/user-attachments/assets/5a9e7fd7-c746-4a3b-b03b-a51ece631acf)
 
 
@@ -53,15 +58,9 @@ A aplicação implementa o rastreamento de eventos detalhados usando o Google Ta
 
 **Funcionalidade de Pesquisa:**
 
-- A pesquisa é realizada em tempo real à medida que o usuário digita no campo de busca.
-- Os resultados da pesquisa são exibidos dinamicamente, filtrando a lista de produtos com base no texto inserido.
+- Por questões de métricas, a pesquisa não é realizada em tempo real, garantindo que sempre capture o termo completo que o usuário está pesquisando.
+- Os resultados da filtra lista de produtos com base no texto inserido e os titulos do produtos.
 - A lógica de filtragem está implementada no Vuex store, permitindo uma fácil extensão para pesquisas mais complexas no futuro.
-
-**Diferenciais:**
-
-- A aplicação utiliza uma estrutura de componentes modular, facilitando a manutenção e extensão do código.
-- O design responsivo garante uma boa experiência do usuário em diferentes dispositivos.
-- A integração com o GTM permite uma análise detalhada do comportamento do usuário, fornecendo insights valiosos para melhorias futuras.
 
 ### Estrutura do projeto
 
@@ -122,12 +121,19 @@ desafioDNA/
    ```bash
    yarn start
    ```
-
    O backend será iniciado na porta **3001**. Ele fornece os dados dos produtos e a rota para o relatório de produtos.
+
+   
+   #### EXEMPLO:
+   ![image](https://github.com/user-attachments/assets/c25eeb22-2881-430f-839a-6fa6f07c2614)
+
+   **Na imagem foi pulado o passo 2 pois eu já pussuia as dependencias instaladas**
+
+   
 
 ### 2. Executando o Frontend
 
-1. **Abra o terminal para o Frontend**:
+1. **Abra outra instancia do terminal para o Frontend**:
    Navegue até a pasta do frontend:
    ```bash
    cd frontend
@@ -144,8 +150,15 @@ desafioDNA/
    ```bash
    yarn serve
    ```
-
    O frontend será iniciado na porta **8080**. Ele exibirá a lista de produtos dinamicamente e permitirá que você salve produtos favoritos no LocalStorage.
+
+   
+  #### EXEMPLO:
+   ![image](https://github.com/user-attachments/assets/19711e5a-ba8b-44e4-aa9f-134605f413b0)
+
+   **Na imagem foi pulado o passo 2 pois eu já pussuia as dependencias instaladas**
+
+   
 
 ### Resumo das Portas
 
