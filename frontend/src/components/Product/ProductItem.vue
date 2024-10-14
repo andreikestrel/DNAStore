@@ -1,10 +1,16 @@
 <!-- eslint-disable vue/no-deprecated-filter -->
 <template>
   <div class="product-item" @click="handleClick">
-    <img :src="product.image" :alt="product.name" />
-    <h3>{{ product.name }}</h3>
-    <p>{{ product.price | currency }}</p>
-    <FavoriteButton :product="product" />
+    <div class="product-box">
+      <div class="product-box-image">
+        <img :src="product.image" :alt="product.title" class="product-image" />
+      </div>
+      <span class="product-title">{{ product.title }}</span>
+      <div>
+        <span class="product-price">R${{ product.price }}</span>
+      </div>
+      <FavoriteButton :product="product" />
+    </div>
   </div>
 </template>
 
@@ -21,7 +27,12 @@ export default {
     const store = useStore();
 
     const handleClick = () => {
-      store.dispatch("productClicked", props.product.id);
+      store.dispatch("productClicked", {
+        id: props.product.id,
+        title: props.product.title,
+        price: props.product.price,
+        category: props.product.category,
+      });
     };
 
     return { handleClick };

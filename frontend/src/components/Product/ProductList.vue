@@ -3,7 +3,7 @@
     <div class="product-box-input-button">
       <h1 class="title"><span>DNA</span> <span>STORE</span></h1>
       <input
-        v-model="searchQuery"
+        v-model.trim="searchQuery"
         @keyup.enter="handleSearch"
         class="search-input"
         placeholder="Buscar produtos"
@@ -36,7 +36,7 @@
     <div v-else-if="error" class="error">
       Erro ao carregar produtos: {{ error }}
     </div>
-    <div class="product-list" v-else-if="filteredProducts.length > 0">
+    <div class="product-list" v-else-if="displayedProducts.length > 0">
       <div
         v-for="product in displayedProducts"
         :key="product.id"
@@ -73,10 +73,12 @@ export default {
   setup() {
     const store = useStore();
     const searchQuery = ref("");
-    const lastSearchQuery = ref(""); // variavel para armazenar a última busca realizada
+    const lastSearchQuery = ref("");
     const showFavorites = ref(false);
     const filteredProducts = ref([]);
     const isSearchActive = ref(false);
+    const loading = ref(true);
+    const error = ref(null);
 
     const displayedProducts = computed(() => {
       if (showFavorites.value) {
@@ -87,32 +89,35 @@ export default {
       return filteredProducts.value;
     });
 
-    const loading = computed(() => store.state.loading);
-    const error = computed(() => store.state.error);
-
-    const toggleShowFavorites = () => {
-      showFavorites.value = !showFavorites.value;
-    };
-
     const handleSearch = () => {
-      // Armazena o valor atual da busca
-      lastSearchQuery.value = searchQuery.value;
+      if (searchQuery.value.trim() === "") {
+        clearSearch();
+        return;
+      }
 
-      // Realiza a filtragem dos produtos
+      lastSearchQuery.value = searchQuery.value;
       filteredProducts.value = store.state.products.filter((product) =>
         product.title
           .toLowerCase()
           .includes(lastSearchQuery.value.toLowerCase())
       );
-
-      // Ativa o estado de busca
       isSearchActive.value = true;
 
-      // Envia os dados para o Google Task Manager
-      sendToGoogleTaskManager(lastSearchQuery.value);
+      store.dispatch("productSearched", {
+        searchQuery: lastSearchQuery.value,
+        resultCount: filteredProducts.value.length,
+      });
 
-      // Log da pesquisa realizada
-      console.log("Pesquisa realizada:", lastSearchQuery.value);
+      console.log(
+        "Pesquisa realizada:",
+        lastSearchQuery.value,
+        "Resultados:",
+        filteredProducts.value.length
+      );
+    };
+
+    const toggleShowFavorites = () => {
+      showFavorites.value = !showFavorites.value;
     };
 
     const clearSearch = () => {
@@ -122,17 +127,15 @@ export default {
       isSearchActive.value = false;
     };
 
-    // Função placeholder para enviar dados ao Google Task Manager
-    const sendToGoogleTaskManager = (query) => {
-      // Implemente a lógica para enviar os dados ao Google Task Manager aqui
-      console.log("Enviando para o Google Task Manager:", query);
-    };
-
-    onMounted(() => {
-      store.dispatch("fetchProducts").then(() => {
-        // Inicializa filteredProducts com todos os produtos
+    onMounted(async () => {
+      try {
+        await store.dispatch("fetchProducts");
         filteredProducts.value = store.state.products;
-      });
+        loading.value = false;
+      } catch (e) {
+        error.value = e.message;
+        loading.value = false;
+      }
     });
 
     return {
@@ -151,6 +154,7 @@ export default {
   },
 };
 </script>
+
 <style scoped>
 .title {
   font-size: 3rem;

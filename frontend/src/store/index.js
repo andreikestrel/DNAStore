@@ -71,21 +71,23 @@ export default createStore({
         });
       }
     },
-    productClicked({ state }, productId) {
+    productClicked({}, product) {
       if (window.dataLayer) {
         window.dataLayer.push({
           event: "product_click",
-          product_id: productId,
-          product_name:
-            state.products.find((p) => p.id === productId)?.title || "",
+          product_id: product.id,
+          product_name: product.title,
+          product_category: product.category,
+          product_price: product.price,
         });
       }
     },
-    productSearched({}, searchQuery) {
+    productSearched({}, searchQuery, resultCount) {
       if (window.dataLayer) {
         window.dataLayer.push({
           event: "product_search",
           search_term: searchQuery,
+          search_results_count: resultCount,
         });
       }
     },

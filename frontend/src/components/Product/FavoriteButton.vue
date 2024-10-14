@@ -56,17 +56,17 @@ export default {
   transition: all 0.3s ease;
   overflow: hidden;
   font-size: 0.6rem;
-  z-index: 1; /* Adicionado para garantir que o botão fique acima de outros elementos */
+  z-index: 1;
 }
 
 .favorite-button:hover {
   width: auto;
-  border-radius: 15px; /* Ajustado para metade da altura */
+  border-radius: 15px;
   padding: 0 10px;
 }
 
 .favorite-button .icon {
-  font-size: 1rem; /* Diminuído de 1.2rem para 1rem */
+  font-size: 1rem;
 }
 
 .favorite-button .text {
