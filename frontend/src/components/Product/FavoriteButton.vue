@@ -1,10 +1,10 @@
 <template>
   <button
-    @click="toggleFavorite"
+    @click.stop="toggleFavorite"
     class="favorite-button"
     :class="{ 'is-favorited': isFavorited }"
   >
-    <span class="icon">{{ isFavorited ? "❤️" : "💔" }}</span>
+    <font-awesome-icon :icon="[isFavorited ? 'fas' : 'far', 'heart']" />
     <span class="text">{{ isFavorited ? "Desfavoritar" : "Favoritar" }}</span>
   </button>
 </template>
@@ -44,7 +44,7 @@ export default {
   position: absolute;
   top: 10px;
   right: 10px;
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(255, 255, 255, 0.9);
   border: none;
   border-radius: 50%;
   width: 30px;
@@ -55,8 +55,9 @@ export default {
   cursor: pointer;
   transition: all 0.3s ease;
   overflow: hidden;
-  font-size: 0.6rem;
+  font-size: 0.8rem;
   z-index: 1;
+  color: #c62e2e;
 }
 
 .favorite-button:hover {
@@ -80,6 +81,6 @@ export default {
 }
 
 .favorite-button.is-favorited {
-  text-align: center;
+  display: flex;
 }
 </style>

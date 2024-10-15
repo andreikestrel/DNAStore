@@ -8,11 +8,19 @@
         class="search-input"
         placeholder="Buscar produtos"
       />
-      <button @click="handleSearch" class="search-button">🔎 Pesquisar</button>
-
-      <button @click="toggleShowFavorites" class="showFavorites-button">
-        {{ showFavorites ? "Mostrar todos" : " ★ Apenas favoritos" }}
+      <button @click="handleSearch" class="search-button">
+        <font-awesome-icon :icon="['fas', 'magnifying-glass']" /> Pesquisar
       </button>
+      <div class="favorites-box-button">
+        <button @click="toggleShowFavorites" class="showFavorites-button">
+          <font-awesome-icon
+            :icon="showFavorites ? ['fas', 'reply-all'] : ['fas', 'star']"
+          />
+          <span>{{
+            showFavorites ? "Mostrar todos" : "Apenas favoritos"
+          }}</span>
+        </button>
+      </div>
     </div>
 
     <div v-if="isSearchActive" class="search-results">
@@ -53,6 +61,12 @@
           <span class="product-title">{{ product.title }}</span>
           <div>
             <span class="product-price">R${{ product.price }}</span>
+          </div>
+          <div class="product-buy">
+            <button class="product-buy-btn">
+              <font-awesome-icon :icon="['fas', 'cart-shopping']" />
+              Comprar
+            </button>
           </div>
           <FavoriteButton :product="product" />
         </div>
@@ -190,7 +204,24 @@ export default {
   width: 60%;
   border-radius: 10px;
 }
-
+.favorites-box-button {
+  width: 180px;
+}
+.showFavorites-button {
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  height: 100%;
+  font-weight: 600;
+}
+.search-button,
+.showFavorites-button span {
+  font-weight: 600;
+  text-wrap: nowrap;
+}
 .search-button,
 .showFavorites-button {
   padding: 10px;
@@ -265,15 +296,25 @@ export default {
   border: 1px solid #ddd;
   padding: 10px;
   border-radius: 5px;
-  transition: transform 0.2s;
+  transition: transform 0.2s, filter 0.3s ease;
   position: relative;
   filter: brightness(70%);
-  transition: filter 0.3s ease;
 }
 
 .product-box:hover {
   transform: scale(1.001);
   filter: brightness(100%);
+}
+
+.product-box .favorite-button {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.product-box:hover .favorite-button {
+  opacity: 1;
+  visibility: visible;
 }
 
 .product-box-image {
@@ -298,6 +339,34 @@ export default {
 
 .product-price {
   font-size: 1.5rem;
+}
+
+.product-buy {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+.product-buy-btn {
+  background-color: #c62e2e;
+  color: white;
+  font-size: 2rem;
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: none;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.product-buy-btn:hover {
+  background-color: #a62828;
+  transform: translateY(-2px);
+}
+
+.product-buy-btn:active {
+  transform: translateY(0);
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 .product-title {
