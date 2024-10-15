@@ -1,14 +1,14 @@
 const Product = require('../models/productModel');
 
 
-const getAllProducts = (req, res) => {
+const getAllProducts = (res) => {
   const products = Product.getProducts();
   res.json(products);
 };
 
 
 // Lógica do relatório
-const getReport = (req, res) => {
+const getReport = (res) => {
   const products = Product.getProducts();
   const totalProducts = products.length;
   const productsByCategory = {};
