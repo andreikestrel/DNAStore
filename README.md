@@ -169,8 +169,33 @@ Não esquecer das rotas `/api/products` ou `/api/products/report`
 
 Com esses passos, você estará pronto para utilizar a aplicação e explorar as funcionalidades!
 
-### Nota sobre o arquivo .env
+## Observações
+---
+
+#### Nota sobre o arquivo .env 
 
 Por se tratar de um projeto de teste e não conter dados sensíveis reais, o arquivo `.env` foi incluído no repositório para facilitar a configuração e execução do projeto. Em um ambiente de produção, recomenda-se adicionar o `.env` ao `.gitignore` para proteger informações sensíveis.
+
+#### Recurso que eu usaria, mas não usei por causa do "usar apenas css puro", fiquei com medo de alguém interpretar isso como algum meio de não ser puro embora os icones sejam estilizados apenas usando css (atualizado após o envio do material)
+
+Enviei os produtos sem alguns recursos para tentar ficar o mais próximo possível do CSS puro. Eu até poderia usar SVG para os ícones, mas isso daria um trabalhão! A ideia de usar apenas CSS é bem legal, mas percebi que, se tivesse incluído alguns ícones do Font Awesome, poderia ter deixado a aparência muito mais bonita e sem complicação. Na verdade, até fiz uma versão 2.0 desse sistema só por diversão, que coloquei na branch de teste, onde utilizei o Font Awesome para adicionar ícones em SVG de forma fácil e prática.
+Depois de submeter o teste, decidi atualizar essa parte da documentação para compartilhar minha visão. Em um projeto real, eu teria feito algumas mudanças para deixar tudo melhor. Aceitei o desafio do CSS puro, mas aqui estão algumas coisas que eu teria feito:
+
+- Botão de Compra: Adicionei um botão de compra com um carrinho do Font Awesome e revisei todos os ícones.
+
+![image](https://github.com/user-attachments/assets/9e048438-e5dd-4bb1-a1e8-dcb3e2cb5cda)
+
+
+- Ícones de Favoritos: Usei um coração preenchido para os favoritos e um coração vazio para os que não são favoritos. Como optei por ícones SVG em vez de emojis, pensei que a experiência do usuário poderia ser mais interessante. O hover do card sumir completamente não parecia tão legal, mas com o ícone de coração do Font Awesome, tudo ficou perfeito.
+
+![image](https://github.com/user-attachments/assets/4214e4a2-f095-4b04-a68c-fcd1f929d1c5)
+
+
+- Mudanças nos Botões: Também dei uma repaginada nos ícones dos botões de busca e de mostrar favoritos / mostrar todos. Para o botão de mostrar todos, coloquei uma seta que indica voltar ao modo anterior, melhorando a experiência do usuário.
+
+![image](https://github.com/user-attachments/assets/38d39b9b-0c13-4ac7-9bae-aab9701cada1)
+
+
+Essas mudanças não só deixariam o visual mais bonito, mas também tornariam a navegação mais intuitiva e agradável 😁
 
 Este projeto demonstra não apenas a aplicação das tecnologias requisitadas, mas também uma abordagem prática e eficiente para resolver o desafio proposto, incluindo uma robusta integração com o Google Tag Manager para análise detalhada do comportamento do usuário.
