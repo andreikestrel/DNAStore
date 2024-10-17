@@ -1,17 +1,21 @@
 <template>
   <div id="app">
-    <ProductList />
+    <nav class="admin-menu">
+      <router-link to="/">Loja</router-link> |
+      <router-link to="/adm/ProductList">Admin Product List</router-link> |
+      <router-link to="/adm/ProductRegistration"
+        >Product Registration</router-link
+      >
+    </nav>
+    <main class="main-content">
+      <router-view />
+    </main>
   </div>
 </template>
 
 <script>
-import ProductList from "./components/Product/ProductList.vue";
-
 export default {
   name: "App",
-  components: {
-    ProductList,
-  },
 };
 </script>
 
@@ -23,14 +27,38 @@ export default {
   padding: 0;
   box-sizing: border-box;
 }
+
 #app {
   background-color: #1e2022;
   min-height: 100vh;
 }
+
 body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+.admin-menu {
+  visibility: hidden;
+  position: fixed;
+  background-color: rgba(44, 62, 80, 0.1);
+  padding: 10px;
+  border-bottom-left-radius: 10px;
+  z-index: 1000;
+}
+.admin-menu:hover {
+  visibility: visible;
+}
+
+.admin-menu a {
+  color: white;
+  text-decoration: none;
+  margin: 0 5px;
+}
+
+.admin-menu a:hover {
+  text-decoration: underline;
 }
 </style>

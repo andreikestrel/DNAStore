@@ -1,7 +1,11 @@
 <template>
   <div class="product-list-container">
-    <div class="product-box-input-button">
-      <h1 class="title"><span>DNA</span> <span>STORE</span></h1>
+    <div class="product-box-header">
+      <h1 class="title">
+        <link rel="stylesheet" href="/" />
+        <span>DNA</span> <span>STORE</span>
+      </h1>
+
       <input
         v-model.trim="searchQuery"
         @keyup.enter="handleSearch"
@@ -21,8 +25,17 @@
           }}</span>
         </button>
       </div>
+      <div>
+        <font-awesome-icon class="navBar-icon" :icon="['fas', 'bars']" />
+        <nav class="navBar">
+          <router-link to="/adm/ProductList">Admin Product List</router-link> |
+          <router-link to="/adm/ProductRegistration"
+            >Product Registration</router-link
+          >
+        </nav>
+      </div>
     </div>
-
+    <div class="margin-helper"></div>
     <div v-if="isSearchActive" class="search-results">
       <template v-if="filteredProducts.length > 0">
         {{ filteredProducts.length }} resultado{{
@@ -44,7 +57,10 @@
     <div v-else-if="error" class="error">
       Erro ao carregar produtos: {{ error }}
     </div>
-    <div class="product-list" v-else-if="displayedProducts.length > 0">
+    <div v-else-if="displayedProducts.length === 0" class="no-products">
+      Nenhum produto encontrado.
+    </div>
+    <div class="product-list" v-else>
       <div
         v-for="product in displayedProducts"
         :key="product.id"
@@ -56,11 +72,14 @@
               :src="product.image"
               :alt="product.title"
               class="product-image"
+              @error="handleImageError"
             />
           </div>
           <span class="product-title">{{ product.title }}</span>
           <div>
-            <span class="product-price">R${{ product.price }}</span>
+            <span class="product-price"
+              >R${{ formatPrice(product.price) }}</span
+            >
           </div>
           <div class="product-buy">
             <button class="product-buy-btn">
@@ -81,6 +100,7 @@ import { useStore } from "vuex";
 import FavoriteButton from "./FavoriteButton.vue";
 
 export default {
+  name: "ProductList",
   components: {
     FavoriteButton,
   },
@@ -91,8 +111,19 @@ export default {
     const showFavorites = ref(false);
     const filteredProducts = ref([]);
     const isSearchActive = ref(false);
-    const loading = ref(true);
-    const error = ref(null);
+    const loading = computed(() => store.state.loading);
+    const error = computed(() => store.state.error);
+
+    onMounted(async () => {
+      try {
+        console.log("ProductList mounted - Fetching products...");
+        await store.dispatch("fetchProducts");
+        filteredProducts.value = store.state.products;
+        console.log("Products fetched successfully:", store.state.products);
+      } catch (err) {
+        console.error("Error fetching products:", err);
+      }
+    });
 
     const displayedProducts = computed(() => {
       if (showFavorites.value) {
@@ -121,13 +152,6 @@ export default {
         searchQuery: lastSearchQuery.value,
         resultCount: filteredProducts.value.length,
       });
-
-      console.log(
-        "Pesquisa realizada:",
-        lastSearchQuery.value,
-        "Resultados:",
-        filteredProducts.value.length
-      );
     };
 
     const toggleShowFavorites = () => {
@@ -141,16 +165,16 @@ export default {
       isSearchActive.value = false;
     };
 
-    onMounted(async () => {
-      try {
-        await store.dispatch("fetchProducts");
-        filteredProducts.value = store.state.products;
-        loading.value = false;
-      } catch (e) {
-        error.value = e.message;
-        loading.value = false;
-      }
-    });
+    const formatPrice = (price) => {
+      return price.toLocaleString("pt-BR", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
+    };
+
+    const handleImageError = (e) => {
+      e.target.src = "/placeholder-image.png"; // Substitua pelo caminho da sua imagem de placeholder
+    };
 
     return {
       searchQuery,
@@ -164,11 +188,12 @@ export default {
       toggleShowFavorites,
       handleSearch,
       clearSearch,
+      formatPrice,
+      handleImageError,
     };
   },
 };
 </script>
-
 <style scoped>
 .title {
   font-size: 3rem;
@@ -176,6 +201,7 @@ export default {
   font-weight: 600;
   color: #c62e2e;
   user-select: none;
+  text-wrap: nowrap;
 }
 .title span:nth-child(2) {
   color: white;
@@ -188,12 +214,18 @@ export default {
   padding: 20px;
 }
 
-.product-box-input-button {
+.product-box-header {
+  background-color: black;
+  position: fixed;
+  top: 0;
+  left: 0;
   display: flex;
   justify-content: center;
+  align-items: center;
   gap: 20px;
+  padding: 10px;
   width: 100%;
-  margin-bottom: 20px;
+  z-index: 1000;
 }
 
 .search-input {
@@ -233,6 +265,29 @@ export default {
   border-radius: 10px;
   font-size: 1rem;
   transition: background-color 0.3s, color 0.3s;
+}
+.navBar-icon {
+  color: white;
+  cursor: pointer; /* Muda o cursor ao passar o mouse */
+}
+
+.navBar {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  opacity: 0; /* Inicialmente invisível */
+  transition: opacity 0.3s ease; /* Transição suave */
+  pointer-events: none; /* Impede interações quando invisível */
+}
+
+.navBar-icon:hover + .navBar {
+  opacity: 1; /* Torna visível ao passar o mouse */
+  pointer-events: auto; /* Permite interações quando visível */
+}
+
+.margin-helper {
+  margin-bottom: 80px;
 }
 .search-results {
   margin-bottom: 20px;
@@ -299,6 +354,7 @@ export default {
   transition: transform 0.2s, filter 0.3s ease;
   position: relative;
   filter: brightness(70%);
+  cursor: pointer;
 }
 
 .product-box:hover {
