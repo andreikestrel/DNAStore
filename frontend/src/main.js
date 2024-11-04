@@ -1,24 +1,33 @@
 import { createApp } from "vue";
 import App from "./App.vue";
-import { createGtm } from "@gtm-support/vue-gtm";
+import router from "./router";
 import store from "./store";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import {
+  faMagnifyingGlass,
+  faCartShopping,
+  faStar,
+  faReplyAll,
+  faHeart,
+} from "@fortawesome/free-solid-svg-icons";
+import { faHeart as farHeart } from "@fortawesome/free-regular-svg-icons";
+import { faBars } from "@fortawesome/free-solid-svg-icons";
+
+library.add(
+  faMagnifyingGlass,
+  faCartShopping,
+  faStar,
+  faReplyAll,
+  faHeart,
+  farHeart,
+  faBars
+);
 
 const app = createApp(App);
 
+app.component("font-awesome-icon", FontAwesomeIcon);
 app.use(store);
-
-app.use(
-  createGtm({
-    id: "GTM-KWQMXRQ9",
-    enabled: true,
-    debug: true,
-    loadScript: true,
-  })
-);
-
-app.config.errorHandler = (err, vm, info) => {
-  console.error("Erro global capturado:", err);
-  console.error("Informações do erro:", info);
-};
+app.use(router);
 
 app.mount("#app");

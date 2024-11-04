@@ -1,4 +1,3 @@
-<!-- eslint-disable vue/no-deprecated-filter -->
 <template>
   <div class="product-item" @click="handleClick">
     <div class="product-box">
@@ -50,5 +49,17 @@ export default {
 
 .product-item:hover {
   background-color: #f5f5f5;
+}
+
+.product-box {
+  position: relative;
+}
+
+.product-box .favorite-button {
+  display: none;
+}
+
+.product-box:hover .favorite-button {
+  display: flex;
 }
 </style>

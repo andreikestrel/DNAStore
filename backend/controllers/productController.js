@@ -1,14 +1,16 @@
 const Product = require('../models/productModel');
+const fs = require('fs');
+const path = require('path');
 
 
-const getAllProducts = (req, res) => {
+const getAllProducts = (res) => {
   const products = Product.getProducts();
   res.json(products);
 };
 
 
 // Lógica do relatório
-const getReport = (req, res) => {
+const getReport = (res) => {
   const products = Product.getProducts();
   const totalProducts = products.length;
   const productsByCategory = {};
@@ -29,6 +31,6 @@ const getReport = (req, res) => {
 
 module.exports = {
   getAllProducts,
+  createProduct,
   getReport
 };
-
